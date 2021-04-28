@@ -32,10 +32,9 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-# for sqlLite
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+# use "DATABASE_URL" environment variable if provided, but if it's None (e.g. when running locally) then we can provide sqlite:///blog.db as the alternative.
 # for postgres in heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
