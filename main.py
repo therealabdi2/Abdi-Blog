@@ -12,6 +12,7 @@ from functools import wraps
 import os
 import psycopg2
 
+
 # Create admin-only decorator
 def admin_only(f):
     @wraps(f)
@@ -42,7 +43,7 @@ gravatar = Gravatar(app,
 ##CONNECT TO DB
 # use "DATABASE_URL" environment variable if provided, but if it's None (e.g. when running locally) then we can provide sqlite:///blog.db as the alternative.
 # for postgres in heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -51,15 +52,12 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-
-
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-##CONFIGURE TABLES
+# CONFIGURE TABLES
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -108,7 +106,7 @@ class Comment(db.Model):
 
 
 # only need to run this once
-# db.create_all()
+db.create_all()
 
 
 @app.route('/')
