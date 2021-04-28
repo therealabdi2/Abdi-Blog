@@ -25,24 +25,11 @@ def admin_only(f):
     return decorated_function
 
 
-# Configuring app and bootstrap
+# Initialize with flask application and default parameters:
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['SECRET_KEY'] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
 ckeditor = CKEditor(app)
 Bootstrap(app)
-
-##CONNECT TO DB
-# use "DATABASE_URL" environment variable if provided, but if it's None (e.g. when running locally) then we can provide sqlite:///blog.db as the alternative.
-# for postgres in heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",  "sqlite:///blog.db")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# Configure Login for users
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-# Initialize with flask application and default parameters:
 gravatar = Gravatar(app,
                     size=100,
                     rating='g',
@@ -51,6 +38,20 @@ gravatar = Gravatar(app,
                     force_lower=False,
                     use_ssl=False,
                     base_url=None)
+
+##CONNECT TO DB
+# use "DATABASE_URL" environment variable if provided, but if it's None (e.g. when running locally) then we can provide sqlite:///blog.db as the alternative.
+# for postgres in heroku
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# Configure Login for users
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+
 
 
 @login_manager.user_loader
