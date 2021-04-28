@@ -179,6 +179,7 @@ def logout():
 def show_post(post_id):
     form = CommentForm()
     requested_post = BlogPost.query.get(post_id)
+
     if form.validate_on_submit():
         if not current_user.is_authenticated:
             flash("You need to login or register to comment.")
@@ -192,9 +193,7 @@ def show_post(post_id):
         db.session.add(new_comment)
         db.session.commit()
 
-    all_comments = Comment.query.all()
-    return render_template("post.html", post=requested_post, current_user=current_user, form=form,
-                           comments=all_comments)
+    return render_template("post.html", post=requested_post, current_user=current_user, form=form)
 
 
 @app.route("/about")
