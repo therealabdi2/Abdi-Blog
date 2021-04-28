@@ -10,7 +10,7 @@ from forms import CreatePostForm, CreateRegForm, CreateLoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import os
-
+import psycopg2
 
 # Create admin-only decorator
 def admin_only(f):
