@@ -1,4 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, flash, abort
+import smtplib
+
+from flask import Flask, render_template, redirect, url_for, flash, abort, request
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from datetime import date
@@ -203,9 +205,27 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=['GET', 'POST'])
 def contact():
-    return render_template("contact.html")
+    if request.method == 'POST':
+        my_email = os.environ['email']
+        password = os.environ['password']
+
+        username = request.form['username']
+        user_email = request.form['user-email']
+        user_phone = request.form['phone']
+        user_msg = request.form['message']
+
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=my_email, password=password)
+            connection.sendmail(from_addr=my_email,
+                                to_addrs=os.environ['end_email'],
+                                msg=f"Subject:New User!\n\nName:{username}"
+                                    f"\nEmail:{user_email}\nPhone:{user_phone}"
+                                    f"\nMessage:{user_msg}")
+        return render_template("contact.html", msg_snt=True)
+    return render_template("contact.html", msg_snt=False)
 
 
 @app.route("/new-post", methods=["GET", "POST"])
