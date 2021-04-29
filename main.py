@@ -135,7 +135,7 @@ def register():
         new_user = User(
             email=form.email.data,
             password=hash_and_salted_password,
-            name=form.name.data
+            name=form.name.data.capitalize()
         )
         db.session.add(new_user)
         db.session.commit()
